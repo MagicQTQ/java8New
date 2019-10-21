@@ -1,10 +1,9 @@
 package highlevellist;
 
-import com.sun.org.apache.xalan.internal.xsltc.util.IntegerArray;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 /*
  * 键盘录入多个数据，以0结束，要求在控制台输出这多个数据中的最大值
@@ -50,6 +49,8 @@ public class ArrayListDemo {
 
         // 获取该数组中的最大索引的值
         System.out.println("数组是：" + Arrays.toString(intArray) + "最大值是:" + intArray[intArray.length - 1]);
+        System.out.println("数组是：" + arrayToString(intArray) + "最大值是:" + intArray[intArray.length - 1]);
+        System.out.println("数组是：" + arrayToString2(intArray) + "最大值是:" + arrayMax(intArray));
     }
 
 
@@ -68,4 +69,20 @@ public class ArrayListDemo {
 
         return sb.toString();
     }
+
+
+    public static String arrayToString2(Integer[] arr) {
+
+        String str = Arrays.asList(arr).stream().map(e -> String.valueOf(e)).collect(Collectors.joining(", ", "[", "]"));
+
+        return str.toString();
+    }
+
+    public static Integer arrayMax(Integer[] arr) {
+
+        Integer max = Arrays.asList(arr).stream().reduce(0, Integer::max);
+
+        return max;
+    }
+
 }

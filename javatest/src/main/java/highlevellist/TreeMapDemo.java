@@ -1,8 +1,6 @@
 package highlevellist;
 
-import java.util.Map;
 import java.util.Scanner;
-import java.util.Set;
 import java.util.TreeMap;
 
 /*
@@ -61,7 +59,7 @@ public class TreeMapDemo {
 //        for (Map.Entry<Character, Integer> ee : entries) {
 //            sb.append(ee.getKey()).append("(").append(ee.getValue()).append(")");
 //        }
-        tm.forEach((x,y) ->{
+        tm.forEach((x, y) -> {
             sb.append(x).append("(").append(y).append(")");
         });
 

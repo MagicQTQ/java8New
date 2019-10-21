@@ -16,6 +16,7 @@ public class InstantTest {
         String date = dateFormat.format(Instant.now());
         System.out.println(date + "=====================" + Instant.now());
 
+        // 格式化的LocalDate 转换 Instant
         Instant begin = LocalDate.parse("2018-12-12", DateTimeFormatter.ofPattern("yyyy-MM-dd")).atStartOfDay()
                 .toInstant(ZoneOffset.of("+8"));
 
@@ -25,10 +26,15 @@ public class InstantTest {
         System.out.println(begin + "======================" + end);
 
         // LocalDate 转换 Instant
-        LocalDate time = LocalDate.now();
-        Instant instant = time.atStartOfDay(ZoneId.of("+8")).toInstant();
+        LocalDate date2Instant = LocalDate.now();
+        Instant timeInstant = date2Instant.atStartOfDay(ZoneId.of("+8")).toInstant();
+        System.out.println(date2Instant + "=======date2Instant==============" + timeInstant);
 
-        System.out.println(time + "==============" + instant);
+        LocalDateTime dateTime = LocalDateTime.now();
+        Instant dateTime2Instant = dateTime.atOffset(ZoneOffset.of("+8")).toInstant();
+        System.out.println(dateTime + "=======dateTime2Instant==============" + dateTime2Instant);
+
+
         // ZonedDateTime 转换 Instant和LocalDateTime
         ZonedDateTime ztime1 = ZonedDateTime.ofInstant(Instant.now(), ZoneId.systemDefault());
         System.out.println(ztime1);
@@ -40,7 +46,10 @@ public class InstantTest {
         System.out.println(ztime2.toLocalDateTime()); //4
 
         //Instant 转换输出格式
-        System.out.println(Instant.now().atZone(ZoneId.of("+8")).toLocalDateTime().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm")));
+        //e.getModified().atZone(ZoneId.of("+8")).format(READABLE_DATETIME);
+        System.out.println(Instant.now().atZone(ZoneId.of("+8")).toLocalDateTime().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")));
+        System.out.println(Instant.now().atZone(ZoneId.of("+8")).format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss:SSS")));
+
 
     }
 

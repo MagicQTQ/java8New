@@ -12,15 +12,15 @@ public class MapDemo {
     public static void main(String[] args) {
 
         String response = "asf";
-        System.out.println(ImmutableMap.of("isClick", "123", "response", response));
+        System.out.println(ImmutableMap.of("isClick", "123", "response", response));  //最多有5个
 
         System.out.println("==================================================================");
-        Map<Integer, String> INTEGER_STRING_MAP = new ImmutableMap.Builder<Integer, String>().
+        Map<Integer, String> maps = new ImmutableMap.Builder<Integer, String>().
                 put(30, "IP地址或地址段").
                 put(31, "端口号或范围").
                 put(32, "IP地址或地址段").
                 put(33, "端口号或范围")
-                .build();
+                .build();  //超过5个，用建造者模式
 
         //另一种写法
         //Map<Integer,String> activityMsgMap = ImmutableMap.<Integer,String>builder().
@@ -31,7 +31,7 @@ public class MapDemo {
         //            build();
 
         Integer key = 30;
-        System.out.println("key = " + key + "的提示语是：" + INTEGER_STRING_MAP.get(key));
+        System.out.println("key = " + key + "的提示语是：" + maps.get(key));
 
     }
 }

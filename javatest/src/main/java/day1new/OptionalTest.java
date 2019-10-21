@@ -35,7 +35,9 @@ public class OptionalTest {
         System.out.println(emptyStr.orElseGet(() -> "optional test"));
 
 
-        List<User> userList = Arrays.asList(new User("2", "lisi", "lisi123"), new User("3", "wangwu", "wangwu1234"));
+        List<User> userList = Arrays.asList(
+                new User("2", "lisi", "lisi123"),
+                new User("3", "wangwu", "wangwu1234"));
         Optional<List<User>> userOptional = Optional.ofNullable(userList);
         userOptional.ifPresent(e -> e.stream().map(User::getUsername).forEach(System.out::println)); // 推荐
 

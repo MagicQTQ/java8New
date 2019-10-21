@@ -1,7 +1,6 @@
 package day1new;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
@@ -111,6 +110,22 @@ public class TestJava8 {
 
         list2.stream().flatMap(word -> Arrays.stream(word.split("")))
                 .collect(Collectors.toList()).forEach(System.out::println);
+
+
+        List<User> userList = Arrays.asList(
+                new User("2", "lisi1", "lisi123"),
+                new User("1", "zhangsan", "zhangsan1234"),
+                new User("2", "lisi2", "lisi456"),
+                new User("3", "wangwu", "wangwu1234"));
+
+        //根据年龄分组，接着在获取分组里面List单个实体的属性值
+        Map<String, List<String>> userGroupByMap = userList.stream()
+                .collect(Collectors.groupingBy(User::getId,
+                        Collectors.mapping(User::getUsername, Collectors.toList())));
+
+
+
+        userGroupByMap.forEach((k, v) -> System.out.println("key:" + k + "，value:" + v));
 
 
     }
