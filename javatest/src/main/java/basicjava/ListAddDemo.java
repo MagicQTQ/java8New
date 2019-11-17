@@ -3,7 +3,9 @@ package basicjava;
 import com.sun.deploy.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 /*
  * ArrayList去除集合中字符串的重复值(字符串的内容相同)
@@ -57,6 +59,11 @@ public class ListAddDemo {
             String s = (String) newArray.get(x);
             System.out.println(s);
         }
+
+        // 线程安全的List，而不用 Vector
+        List<String> syn=Collections.synchronizedList(new ArrayList<>());
+
+
     }
 
 }

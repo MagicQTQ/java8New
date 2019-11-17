@@ -108,7 +108,7 @@ public class GroupByTest {
                 .collect(Collectors.partitioningBy(Transaction::getFlag, Collectors.groupingBy(Transaction::getYear)));
         System.out.println(partitionMap2);
 
-        //根据Value大于700 为true的进行分区，返回 true，然后在700里面根据年份分组
+        //根据Value大于700 为true的进行分区，返回 true；小于700，则返回false；然后各自在true和false分区里面再根据年份分组
         Map<Boolean, Map<Integer, List<Transaction>>> partitionMap4 = transactionList.stream()
                 .collect(Collectors.partitioningBy(e -> e.getValue() >= 700, Collectors.groupingBy(Transaction::getYear)));
         System.out.println("partitionMap4："+partitionMap4);

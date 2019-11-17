@@ -35,7 +35,7 @@ public class RenameDemo {
             // int endIndex = name.lastIndexOf('.');
             // String nameString = name.substring(startIndex + 1, endIndex); //桃园三结义
             // System.out.println(nameString);
-            int endIndex = name.lastIndexOf('_');
+            int endIndex = name.lastIndexOf('_'); //找到最后一个 _ 所在的索引位置
             String nameString = name.substring(endIndex);
 
             String newName = numberString.concat(nameString); // 001_桃园三结义.avi

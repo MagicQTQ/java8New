@@ -1,20 +1,11 @@
 package file;
 
-import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.output.WriterOutputStream;
 
-import java.io.*;
-import java.nio.charset.Charset;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @Author qtq
@@ -35,8 +26,7 @@ public class IOCopyFile {
 //        }
 
 
-
-//        Files.copy(Paths.get("D:\\file2.txt"), new FileOutputStream(("output.txt")));  //NIO的复制文件
+        Files.copy(Paths.get("D:\\file2.txt"), new FileOutputStream("output.txt"));  //NIO的复制文件
 //
 //        List<String> lists = new ArrayList<>();
 //        lists.add("hello");

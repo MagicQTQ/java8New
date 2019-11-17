@@ -24,8 +24,8 @@ public class ListAndSetDemo {
         //差集
 //        list1.removeAll(list2);
         //无重复并集
-        list2.removeAll(list1);
-        list1.addAll(list2);
+//        list2.removeAll(list1);
+//        list1.addAll(list2);
 
         Iterator<String> it = list1.iterator();
         while (it.hasNext()) {

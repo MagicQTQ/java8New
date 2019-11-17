@@ -8,9 +8,9 @@
 
         StringBuilder b = new StringBuilder();
         b.append('[');
-        for (int i = 0; ; i++) {
+        for (int i = 0; ; i++) {  // 死循环
             b.append(String.valueOf(a[i]));
-            if (i == iMax)
+            if (i == iMax) // 当i等于最大数组长度时，返回
                 return b.append(']').toString();
             b.append(", ");
         }
