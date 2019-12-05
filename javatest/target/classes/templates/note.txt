@@ -1,0 +1,137 @@
+如果想将汉化菜单改回原来的英文版本：
+root@bt:/#cd BT5-Kde-Change/
+root@bt:/ BT5-Kde-Change#空格./MenuChange-en.sh
+
+www.muKedaba.com
+172.19.28.32
+255.255.255.128
+172.19.28.126
+
+202.192.128.33
+202.192.128.66
+
+
+
+
+
+本人多次担任面试考官，以下信息供参考。面试包括三个方面：（一）备课，是随机抽取试讲内容的。抽到试讲内容后要注意以下三点：1.看清内容及要求，几年级内容？这个阶段学生的大概基础与学习心理状况。即看清内容，思考学情；2.明确目标，把握重难点，本课教学目标是什么？重难点在哪？要想一想。3．思考教学方法，设想教学思路，包括教具。在上述基础上开始设计教学方案：一是设计教学目标，包括知识技能、过程方法、情感态度和价值观；二是设定教学重难点；三是设计教学过程。（二）试讲，即模拟上课。也要注意三个方面：1．讲清流程。包括：三个反映两个体现一个有，具体为试讲要反映本课的主要内容，反映你所采取的教学方法策略，反映在师生互动中获得的信息及你作出的反馈；体现课堂上师生有良好的互动，体现课堂上有练习安排及教师的板书设计；有课堂小结和作业布置。2、妥善处理。一是情境创设要合理，内容表达要清楚，力求准确；二是提的问题要有启发性；三是有与学生交流与反馈，并有适当的评价；四是板书设计要突出主题，层次清楚，字迹工整，字数适当。3、注意细节。一是开门见山讲内容；二是语言淸晰、标准，语速中等；三是音量稍高，语调抑扬顿挫；四是注意仪表。（三）回答问题。一是随机抽取的二个规定问题，包括对教师职业的理解及思维能力，体现对问题的理解和解决问题能力，其中往往有学生偶发事件的处理。这类问题是在试讲开始前进行的。二是考官对试讲的提问，是在试讲结束后进行，一般是围绕教学目标及重难点来提为多。
+
+
+package Hbase;
+
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hbase.HBaseConfiguration;
+import org.apache.hadoop.hbase.HColumnDescriptor;
+import org.apache.hadoop.hbase.HTableDescriptor;
+import org.apache.hadoop.hbase.client.HBaseAdmin;
+import org.apache.hadoop.hbase.client.Put;
+import org.apache.hadoop.hbase.mapreduce.TableOutputFormat;
+import org.apache.hadoop.hbase.mapreduce.TableReducer;
+import org.apache.hadoop.hbase.util.Bytes;
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.NullWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Counter;
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
+
+public class BatchImport {
+	private static Configuration conf =null;
+	/**
+	 * 初始化配置
+	*/
+	static {
+	conf = HBaseConfiguration.create();
+	}
+
+	/**
+	 * 创建表操作
+	 * @throws IOException
+	*/
+	public static void createTable(String tablename, String[] familys) throws IOException {
+	HBaseAdmin admin =new HBaseAdmin(conf);
+		if (admin.tableExists(tablename)) {
+			System.out.println("表已经存在！");
+		}
+		else {
+	HTableDescriptor tableDesc =new HTableDescriptor(tablename);
+			for (int i =0; i<familys.length; i++) {
+				tableDesc.addFamily(new HColumnDescriptor(familys[i]));
+		    }
+	admin.createTable(tableDesc);
+	System.out.println("表创建成功！");
+	 }
+	}
+
+	
+	static class BatchImportMapper extends Mapper<LongWritable, Text, LongWritable, Text>{
+		SimpleDateFormat dateformat1=new SimpleDateFormat("yyyyMMddHHmmss");
+		Text v2 = new Text();
+		
+		protected void map(LongWritable key, Text value, Context context) throws java.io.IOException ,InterruptedException {
+			final String[] splited = value.toString().split(" ");
+			try {
+				final Date date = new Date(Long.parseLong(splited[0].trim()));
+				final String dateFormat = dateformat1.format(date);
+				String rowKey = splited[1]+":"+dateFormat;
+				v2.set(rowKey+" "+value.toString());
+				context.write(key, v2);
+			} catch (NumberFormatException e) {
+				final Counter counter = context.getCounter("BatchImport", "ErrorFormat");
+				counter.increment(1L);
+				System.out.println("出错了"+splited[0]+" "+e.getMessage());
+			}
+		};
+	}
+	
+	static class BatchImportReducer extends TableReducer<LongWritable, Text, NullWritable>{
+		protected void reduce(LongWritable key, java.lang.Iterable<Text> values, 	Context context) throws java.io.IOException ,InterruptedException {
+			for (Text text : values) {
+				final String[] splited = text.toString().split(" ");
+				
+				final Put put = new Put(Bytes.toBytes(splited[0]));
+				put.add(Bytes.toBytes("cf"), Bytes.toBytes("date"), Bytes.toBytes(splited[1]));
+				put.add(Bytes.toBytes("cf"), Bytes.toBytes("msisdn"), Bytes.toBytes(splited[2]));
+				put.add(Bytes.toBytes("cf"),Bytes.toBytes("apmac"), Bytes.toBytes(splited[3]));
+				//其他字段不考虑
+				context.write(NullWritable.get(), put);
+			}
+		};
+	}
+	
+	public static void main(String[] args) throws Exception {
+		
+		
+		final Configuration configuration = new Configuration();
+		//设置zookeeper
+		configuration.set("hbase.zookeeper.quorum", "master");
+		//设置hbase表名称
+		configuration.set(TableOutputFormat.OUTPUT_TABLE, "wlan_log");
+		//将该值改大，防止hbase超时退出
+		configuration.set("dfs.socket.timeout", "180000");
+		
+		String [] cf = {"cf"};
+		createTable("wlan_log", cf);
+		
+		final Job job = new Job(configuration, "hbase");
+		
+		job.setMapperClass(BatchImportMapper.class);
+		job.setReducerClass(BatchImportReducer.class);
+		//设置map的输出，不设置reduce的输出类型
+		job.setMapOutputKeyClass(LongWritable.class);
+		job.setMapOutputValueClass(Text.class);
+		
+		job.setInputFormatClass(TextInputFormat.class);
+		//不再设置输出路径，而是设置输出格式类型
+		job.setOutputFormatClass(TableOutputFormat.class);
+		
+		FileInputFormat.setInputPaths(job, "hdfs://master:9000/55");
+		
+		job.waitForCompletion(true);
+	}
+}

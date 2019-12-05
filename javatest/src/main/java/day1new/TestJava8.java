@@ -124,7 +124,7 @@ public class TestJava8 {
                         Collectors.mapping(User::getUsername, Collectors.toList())));
 
 
-
+        // map的遍历
         userGroupByMap.forEach((k, v) -> System.out.println("key:" + k + "，value:" + v));
 
 

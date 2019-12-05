@@ -5,7 +5,6 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
-import java.util.stream.Stream;
 
 public class GroupByTest {
 
@@ -62,7 +61,7 @@ public class GroupByTest {
         int total3 = transactionList.stream().map(Transaction::getValue).reduce(Integer::sum).get();
 
         //IntStream 求和
-        long count = IntStream.rangeClosed(1, 100).filter(n -> n % 2 == 0).sum(); // range 不包含 100
+        long count = IntStream.rangeClosed(1, 100).filter(n -> n % 2 == 0).sum(); // range不包含100，rangeClosed包含100
         System.out.println(count);
 
 
@@ -85,10 +84,19 @@ public class GroupByTest {
         Map<Integer, IntSummaryStatistics> collectMap = transactionList.stream()
                 .collect(Collectors.groupingBy(Transaction::getYear, Collectors.summarizingInt(Transaction::getValue)));
         System.out.println(collectMap);
-        Set<Entry<Integer, IntSummaryStatistics>> collectSet = collectMap.entrySet();
-        for (Entry<Integer, IntSummaryStatistics> entry : collectSet) {
-            System.out.println(entry.getKey() + "============" + entry.getValue());
-        }
+
+        collectMap.forEach((k, v) -> System.out.println("k：" + k + "，value：" + v));
+//        Set<Entry<Integer, IntSummaryStatistics>> collectSet = collectMap.entrySet();
+//        for (Entry<Integer, IntSummaryStatistics> entry : collectSet) {
+//            System.out.println(entry.getKey() + "============" + entry.getValue());
+//        }
+
+        //按照年龄分组，拿到各年龄组的交易者的
+        Map<Integer, List<Trader>> listMap = transactionList.stream()
+                .collect(Collectors.groupingBy(Transaction::getYear, Collectors.mapping(Transaction::getTrader, Collectors.toList())));
+
+        listMap.forEach((k, v) -> System.out.println("key:" + k + "，value:" + v));
+
 
         // 分区函数，根据true或者false值来分区
         Map<Boolean, List<Transaction>> partitionMap = transactionList.stream()
@@ -111,7 +119,7 @@ public class GroupByTest {
         //根据Value大于700 为true的进行分区，返回 true；小于700，则返回false；然后各自在true和false分区里面再根据年份分组
         Map<Boolean, Map<Integer, List<Transaction>>> partitionMap4 = transactionList.stream()
                 .collect(Collectors.partitioningBy(e -> e.getValue() >= 700, Collectors.groupingBy(Transaction::getYear)));
-        System.out.println("partitionMap4："+partitionMap4);
+        System.out.println("partitionMap4：" + partitionMap4);
         partitionMap4.forEach((k, v) -> System.out.println(k + "===========partitionMap4============" + v));
 
         Set<Entry<Boolean, Map<Integer, List<Transaction>>>> partitionSet2 = partitionMap2.entrySet();
