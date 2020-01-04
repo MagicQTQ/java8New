@@ -1,5 +1,7 @@
 package day1new;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -80,7 +82,7 @@ public class TestJava8 {
         String ss = lists.stream().collect(Collectors.joining(",", "{{((", "))}}"));
         System.out.println(ss);
 
-        long L1 = LongStream.rangeClosed(1, 100).sum();
+        long L1 = LongStream.range(1, 100).sum();
         int i2 = IntStream.rangeClosed(1, 100).reduce(Integer::sum).getAsInt();
         System.out.println(L1 + "============" + i2);
 
@@ -90,14 +92,17 @@ public class TestJava8 {
         List<String> stringList = Arrays.asList("hello welcome", "world haha", "dobi some", "hello world welcome");
         //也可以这样
         stringList.stream().map(item -> item.split(" ")).flatMap(Arrays::stream)
-                .distinct().collect(Collectors.toList())
+//                .distinct().collect(Collectors.toList())
+                .collect(Collectors.toSet())
                 .forEach(e -> System.out.print(e + " "));
+
+        System.out.println();
         System.out.println("========================================================");
         stringList.stream().flatMap(item -> Arrays.stream(item.split(" ")))
                 .map(String::toUpperCase)
-                .distinct().collect(Collectors.toList())
+                .collect(Collectors.toList())
                 .forEach(e -> System.out.print(e + " "));
-
+        System.out.println();
         System.out.println("========================================================");
         /**相互组合**/
         List<String> list2 = Arrays.asList("hello", "hi", "你好");
@@ -107,8 +112,8 @@ public class TestJava8 {
                 .collect(Collectors.toList())
                 .forEach(e -> System.out.print(e + " "));
 
-
-        list2.stream().flatMap(word -> Arrays.stream(word.split("")))
+        // 把里面的每一项独自再细分
+        list2.stream().flatMap(word -> Arrays.stream(word.split(""))).filter(e ->!e.equals("l"))
                 .collect(Collectors.toList()).forEach(System.out::println);
 
 
@@ -117,6 +122,7 @@ public class TestJava8 {
                 new User("1", "zhangsan", "zhangsan1234"),
                 new User("2", "lisi2", "lisi456"),
                 new User("3", "wangwu", "wangwu1234"));
+
 
         //根据年龄分组，接着在获取分组里面List单个实体的属性值
         Map<String, List<String>> userGroupByMap = userList.stream()
@@ -128,5 +134,8 @@ public class TestJava8 {
         userGroupByMap.forEach((k, v) -> System.out.println("key:" + k + "，value:" + v));
 
 
+        // List to Map
+        Map<String, String> userMaps = userList.stream().collect(Collectors.toMap(User::getPassword, User::getUsername));
+        System.out.println(userMaps);
     }
 }

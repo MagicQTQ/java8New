@@ -13,13 +13,15 @@ public class IdeaShow {
         int b=123;
         String str ="345";
 
-        //IDEA:project = Eclipse:Workspace ; IDEA:module = Eclipse:project
+        //IDEA:project = Eclipse:Workspace ;
+        // IDEA:module = Eclipse:project
 
         // soutp  "方法形参名 = " + 形参名
         // soutv  "变量名 = " + 变量
         // soutm  "当前类名.当前方法"
         // “abc”.sout => System.out.println("abc");
         System.out.println("b = " + b);
+
 
         List<String> strList = new ArrayList<>();
 
